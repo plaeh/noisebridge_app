@@ -1,0 +1,446 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Noisebridge</title>
+        <style type="text/css" media="screen">@import "jqtouch/jqtouch.min.css";</style>
+        <style type="text/css" media="screen">@import "themes/jqt/theme.min.css";</style>
+        <script src="jqtouch/jquery.1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="jqtouch/jqtouch.min.js" type="application/x-javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+            var jQT = new $.jQTouch({
+                icon: 'jqtouch.png',
+                addGlossToIcon: false,
+                startupScreen: 'jqt_startup.png',
+                statusBar: 'black',
+                preloadImages: [
+                    'themes/jqt/img/back_button.png',
+                    'themes/jqt/img/back_button_clicked.png',
+                    'themes/jqt/img/button_clicked.png',
+                    'themes/jqt/img/grayButton.png',
+                    'themes/jqt/img/whiteButton.png',
+                    'themes/jqt/img/loading.gif'
+                    ]
+            });
+            // Some sample Javascript functions:
+            $(function(){
+                // Show a swipe event on swipe test
+                $('#swipeme').swipe(function(evt, data) {                
+                    $(this).html('You swiped <strong>' + data.direction + '</strong>!');
+                });
+                $('a[target="_blank"]').click(function() {
+                    if (confirm('This link opens in a new window.')) {
+                        return true;
+                    } else {
+                        $(this).removeClass('active');
+                        return false;
+                    }
+                });
+                // Page animation callback events
+                $('#pageevents').
+                    bind('pageAnimationStart', function(e, info){ 
+                        $(this).find('.info').append('Started animating ' + info.direction + '&hellip; ');
+                    }).
+                    bind('pageAnimationEnd', function(e, info){
+                        $(this).find('.info').append(' finished animating ' + info.direction + '.<br /><br />');
+                    });
+                // Page animations end with AJAX callback event, example 1 (load remote HTML only first time)
+                $('#callback').bind('pageAnimationEnd', function(e, info){
+                    if (!$(this).data('loaded')) {                      // Make sure the data hasn't already been loaded (we'll set 'loaded' to true a couple lines further down)
+                        $(this).append($('<div>Loading</div>').         // Append a placeholder in case the remote HTML takes its sweet time making it back
+                            load('ajax.html .info', function() {        // Overwrite the "Loading" placeholder text with the remote HTML
+                                $(this).parent().data('loaded', true);  // Set the 'loaded' var to true so we know not to re-load the HTML next time the #callback div animation ends
+                            }));
+                    }
+                });
+                // Orientation callback event
+                $('body').bind('turn', function(e, data){
+                    $('#orient').html('Orientation: ' + data.orientation);
+                });
+            });
+        </script>
+        <style type="text/css" media="screen">
+        	h1 {
+				color: red;
+        	}
+			h2 {
+            	color: #fff;
+            }
+            p {
+            	text-align: justify;
+            }
+            .toolbar h1 {
+            	color: red;
+            }
+            body.fullscreen #home .info {
+                display: none;
+            }
+            #about {
+                padding: 50px 10px 40px;
+                text-shadow: rgba(255, 255, 255, 0.3) 0px -1px 0;
+                font-size: 13px;
+                text-align: center;
+                background: #161618;
+            }
+            #about p {
+            	text-align: center;
+            }
+            #about a {
+                color: #fff;
+                font-weight: bold;
+                text-decoration: none;
+            }
+            #money p {
+            	margin-bottom: 9px;
+            }
+            #calendar p {
+            	text-align: left;
+            }
+            #calendar table, #calendar tr, #calendar th, #calendar td {
+            	border: none;
+            }
+            #calendar th, #calendar td {
+            	vertical-align: top;
+            }
+            #calendar th {
+            	white-space: nowrap;
+            	font-weight: bold;
+            }
+        </style>
+		<script type="text/javascript" charset="utf-8" src="phonegap-0.9.2.js"></script>      
+		<script type="text/javascript" charset="utf-8">
+			document.addEventListener("deviceready", function() {
+			//alert('initialized');
+			}, true);
+		</script>
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function(){
+				$("#open_gate").click(function(){
+					$.getJSON('http://pony.noisebridge.net/gate/?key=MobileBridge');
+				});
+			});
+        </script>
+    </head>
+    <body>
+        <div id="about" class="selectable">
+                <p><img src="noisebridge-200x200.png" /></p>
+                <p style="font-weight: bold;">Be excellent.</p>
+                <p style="margin: 9px auto;">
+                    Release 2 ( 2010-12-13-1 )
+                </p>
+                <p style="margin: 9px auto; text-align: justify;">
+                	Noisebridge is a space for sharing, creation, collaboration, 
+                	research, development, mentoring, and of course, learning. 
+                	Noisebridge is also more than a physical space, 
+                	it's a community with roots extending around the world. 
+                </p>
+                <p><a href="#" class="grayButton goback">Close</a></p>
+        </div>
+        <div id="gate" class="selectable">
+			<div class="toolbar">
+				<h1>Open Gate</h1>
+				<a class="back" href="#home">Home</a>
+            </div>
+			<img id="open_gate" style="display: block; margin: 27px auto;" src="padlock-unlocked.png" />
+			<p style="margin: 27px auto; text-align: center; font-weight: bold;">
+				Click lock to open gate.
+			</p>
+			<p style="padding: 27px 0;">&nbsp;</p>
+        </div>
+        <div id="money">
+            <div class="toolbar">
+                <h1>Contribute</h1>
+                <a class="back" href="#home">Home</a>
+            </div>
+            <img style="display: block; margin: 0 auto;" src="noisebridge_help_out.png" />
+<h2>How Can I Donate Or Pay Dues?</h2>
+<h3>PayPal</h3>
+<p>
+	Funds are payable to treasurer@noisebridge.net .
+	Click the PayPal logo below for details.	
+</p>
+<a href="https://www.noisebridge.net/wiki/Donate_or_Pay_Dues" target="_blank">
+	<img style="display: block; margin: 0 auto;" src="paypal.png" />
+</a>
+<h3>Checks</h3>
+<p>
+	Check made out to "Noisebridge", with memo: "December Dues" or "Donation" (or whatever is appropriate).<br />
+    Give it to a board member or officer at the space, or mail to:<br />
+    2215-R Market St. #235<br />
+    San Francisco, CA 94114<br />
+</p>
+<h3>Cash</h3>
+<p>
+	Give cash to a board member or officer at the space, or any of the donation buckets.<br />
+	For dues, please use an envelope labeled with your name, the amount, and "December Dues" (or whatever is appropriate). 
+</p>
+<h3>Direct Bank Transfer</h3>
+<p>
+	Email treasurer@noisebridge.net for details.<br />
+	Wells Fargo customers can do this free online.
+</p>
+<h2>Are donations tax deductible?</h2>
+<p>
+	Noisebridge is an educational non-profit CA corporation for the public good, and we recently received 501(c)(3) tax exempt status. All donations to Noisebridge since October 2008 are considered charitable gifts. Whether or not your donation is tax deductible depends on your tax situation and other factors; consult your tax preparer.
+	Please contact secretary@noisebridge.net and treasurer@noisebridge.net should you require documentation of your donation.
+</p>
+<h2>Are memberships tax deductible?</h2>
+<p>
+	This depends on your tax situation and other factors and as such is not answerable by Noisebridge.
+	Some value may be received in exchange for your dues, depending on your usage of the Noisebridge space.
+	Please discuss it with your tax preparer.
+</p>
+<h2>Company donation-matching</h2>
+<p>
+	Some employers will match an employee's tax-deductible contribution to a 501(c)(3) nonprofit. 
+	Generally, the nonprofit has to do some small amount of paperwork.
+	Contact a board member if your employer will match, and we're happy to do this work.
+</p>
+		</div>
+        <div id="visitors">
+            <div class="toolbar">
+                <h1>Visitor Advice</h1>
+                <a class="back" href="#home">Home</a>
+            </div>
+            <img style="display: block; margin: 0 auto;" src="noisebridge_get_involved.png" />
+<h2>Who is welcome</h2>
+<p>Everyone is welcome and encouraged to visit Noisebridge. We ask that visitors follow our rule of 
+"be excellent to each other" in the best spirit they can. Visitors can drop by anytime unannounced. 
+You do not need an invitation, or to be attending a scheduled event/class. 
+It may be wise to follow the advice below on the best times to visit, to ensure there are people there 
+who can let you in. You can also talk on IRC or the Mailing list to figure out a good time, and ask if 
+someone is willing to give you a tour.</p>
+
+<h2>Come with an open mind</h2>
+<p>Noisebridge is largely about learning and exploring, and there's lots to see and learn here! Activities 
+at Noisebridge include hanging out, working on personal or group projects, and scheduled or improptu workshops 
+and classes on a range of topics, from foreign languages to photography, lockpicking, woodworking, computer 
+programming and mathematics.</p>
+
+<h2>Not "child-safe"</h2>
+<p>We have not limited what we like to explore or discuss according to anyone's notions of "appropriateness" 
+for children. Thus, anyone entering the space can be exposed to adult-themed ideas, concepts, language and items. 
+We also have some tools and materials that can be hazardous for children or adults if used improperly. Children 
+are as welcome in the space as any other person - just be prepared for what they may encounter.</p>
+
+<h2>Some times better than others</h2>
+<p>We have many scheduled activities in the space, and many of us have day jobs. You can coordinate the time 
+of your visit to ensure that you can find people to talk with (and to let you into the building!).</p>
+
+<h2>Our code of conduct</h2>
+<p>Our code of conduct is "be excellent to one another". Please respect the other people you meet at Noisebridge 
+and the Noisebridge space itself. We welcome visitors because we believe in our community and want to share the 
+things we're working on with everyone.</p>
+
+<h2>Other people's stuff</h2>
+<p>Please try to be careful with the things you find at Noisebridge, and recognize that the things on shelves 
+are other people's stuff.</p>
+
+<h2>Hostile network</h2>
+<p>The network at Noisebridge - like any public network - should be regarded as potentially hostile. 
+This means that you should assume that any unencrypted communications over the network could (and most likely are) 
+be monitored by others.</p>
+        </div>
+        <div id="location">
+            <div class="toolbar">
+                <h1>Location</h1>
+                <a class="back" href="#">Home</a>
+            </div>
+			<img style="display: block; margin: 0 auto;" src="noisebridge_goto_2169.png" />
+			<img style="display: block; margin: 3px auto;" src="noisebridge_location.png" />
+			<img style="display: block; margin: 3px auto;" src="noisebridge_front.jpg" />
+			<p style="text-align: justify;">Noisebridge is located on the 3rd floor of 2169 Mission Street, San Francisco, CA 
+			94110-1219, (37.76717 N, 122.418423 W) between 17th and 18th street, 1.5 blocks blocks south of 16th Street 
+			Mission BART station. Use the intercom to ask to be buzzed into the space. 
+			An elevator with manually-operated doors is available.</p> 
+        </div>
+        <div id="home" class="current">
+            <div class="toolbar">
+                <h1>Noisebridge</h1>
+                <a class="button dissolve" id="infoButton" href="#about">About</a>
+            </div>
+            <ul class="rounded">
+                <li class="arrow"><a href="#calendar">Calendar</a></li>
+                <li class="arrow"><a href="#location">Location</a></li>
+                <li class="arrow"><a href="#visitors">Visitor Advice</a></li>
+                <li class="arrow"><a href="#money">Donate &amp; Pay Dues</a></li>
+                <li class="arrow"><a href="#gate">Open Gate</a></li>
+                
+            </ul>
+            <h2>&nbsp;</h2>
+            <ul class="rounded">
+				<li class="forward"><a href="http://www.noisebridge.net/" target="_blank">Noisebridge Website</a></li>
+            </ul>
+            <div class="info" style="background: none; border: none; color: white;">
+                <p style="text-align: center;"><span style="color: red;">Noisebridge</span> is an educational non-profit<br /> 
+                made possible by people like you.</p>
+                <p>
+                	<br /><br /><br />
+                </p>
+            </div>
+        </div>
+        <div id="calendar">
+            <div class="toolbar">
+                <h1>Calendar</h1>
+                <a class="back" href="#">Home</a>
+            </div>
+            <img style="display: block; margin: 0 auto;" src="noisebridge_get_involved.png" />
+            <h2>Weekly Recurring Events</h2>
+				<h3>Monday</h3>
+				<table>
+					<tr>
+						<th>Anytime</th>
+						<td>Take trash outside for Tuesday morning pickup.</td>
+					</tr>
+					<tr>
+						<th>6 pm</th>
+						<td>iPhone OS developer meetup.</td>
+					</tr>
+					<tr>
+						<th>6:30 pm</th>
+						<td>PyClass<br />Learn to program Python.</td>
+					</tr>
+					<tr>
+						<th>7 pm</th>
+						<td>Circuit Hacking Mondays<br />Learn to solder.</td>
+					</tr>
+					<tr>
+						<th>7 pm</th>
+						<td>(1st and 3rd Mondays)<br />BACE Timebank group.</td>
+					</tr>
+				</table>
+				<h3>Tuesday</h3>
+				<table>
+					<tr>
+						<th>3 pm</th>
+						<td>Linux System Administration Study Group.</td>
+					</tr>
+					<tr>
+						<th>5 pm</th>
+						<td>Tastebridge<br />Food hacking.</td>
+					</tr>
+					<tr>
+						<th>6:30 pm</th>
+						<td>Bay Area Commnity Exchange Project Roundtable Meeting.</td>
+					</tr>
+					<tr>
+						<th>7 pm</th>
+						<td>Ruby Tuesday<br />Learn Ruby.</td>
+					</tr>
+					<tr>
+						<th>7:30 pm</th>
+						<td>Probability study group.</td>
+					</tr>
+					<tr>
+						<th>8 pm</th>
+						<td>Noisebridge weekly meeting.</td>
+					</tr>
+					<tr>
+						<th>9 pm</th>
+						<td>Hack-mobile project.</td>
+					</tr>
+				</table>
+				<h3>Wednesday</h3>
+					<table>
+						<tr>
+							<th>6 pm</th>
+							<td>Linux Discussion<br />Play with Linux in the Turing classroom</td>
+						</tr>
+						<tr>
+							<th>6 pm</th>
+							<td>Gamebridge Unityversity<br />Collab and learn to make video games with geeks</td>
+						</tr>
+						<tr>
+							<th>6 pm</th>
+							<td>Barcamp Staffing<br />Interested in helping out with BarCamp SF</td>
+						</tr>
+						<tr>
+							<th>6 pm</th>
+							<td>Tastebridge<br />Brewing Course</td>
+						</tr>
+						<tr>
+							<th>7 pm</th>
+							<td>SCoW<br />Sewing, Crafting, Or Whatever!</td>
+						</tr>
+						<tr>
+							<th>7:30 pm</th>
+							<td>Machine Learning<br />Teach computers to learn stuff using AI and other techniques</td>
+						</tr>
+					</table>
+				<h3>Thursday</h3>
+					<table>
+						<tr>
+							<th>Anytime</th>
+							<td>Trash Night<br />Don't forget to take out the trash for Friday morning</td>
+						</tr>
+						<tr>
+							<th>6:30 pm</th>
+							<td>Every 2nd Thursday:<br />Arduino workshop/playshop.<br />ARDUINO IS ON VACATION AND WILL RESUME ON 1/13</td>
+						</tr>
+						<tr>
+							<th>7:30 pm</th>
+							<td>Games<br />Play games with geeks</td>
+						</tr>
+						<tr>
+							<th>8 pm</th>
+							<td>3rd Thursday:<br />Five Minutes of Fame</td>
+						</tr>
+					</table>
+				<h3>Friday</h3>
+					<table>
+						<tr>
+							<th>3 pm</th>
+							<td>Linux Sys Admin Study Group<br />Study Linux admining</td>
+						</tr>
+						<tr>
+							<th>7 pm</th>
+							<td>Science, Engineering & Design Huddle - Weekly group to discuss design approach, share techniques, and solve any project(s) problem(s)</td>
+						</tr>
+						<tr>
+							<th>8 pm</th>
+							<td>2169 Buildout planning<br />Discussion & execution of how to renovate our new space</td>
+						</tr>
+					</table>
+				<h3>Saturday</h3>
+					<table>
+						<tr>
+							<th>6 pm</th>
+							<td>1st Saturday:<br />Pwn Your Own<br />Learn about every day security threats</td>
+						</tr>
+					</table>
+				<h3>Sunday</h3>
+					<table>
+						<tr>
+							<th>3 pm</th>
+							<td>Go<br />Playing of the Go boardgame.<br />On nice days we often take the boards to Dolores Park</td>
+						</tr>
+						<tr>
+							<th>3 pm</th>
+							<td>Locks<br />Lock sport, sundays when there is demand</td>
+						</tr>
+						<tr>
+							<th>6 pm</th>
+							<td>Spacebridge<br />Noisebridge's space program</td>
+						</tr>
+						<tr>
+							<th>6 pm</th>
+							<td>Code Bridge<br />Codebridge projects time help each other with their code</td>
+						</tr>
+						<tr>
+							<th>2 pm</th>
+							<td>2nd Sunday:<br />Bay Area Hacker's Association<br />security meeting</td>
+						</tr>
+					</table>
+        </div>
+        <form id="ajax_post" action="ajax_post.php" method="POST" class="form">
+            <div class="toolbar">
+                <h1>Post Demo</h1>
+                <a class="back" href="#">Ajax</a>
+            </div>
+            <ul class="rounded">
+                <li><input type="text" name="zip" value="" placeholder="Zip Code" /></li>
+            </ul>
+            <a style="margin:0 10px;color:rgba(0,0,0,.9)" href="#" class="submit whiteButton">Submit</a>
+        </form>
+    </body>
+</html>
