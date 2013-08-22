@@ -1,0 +1,58 @@
+h1 {
+	color: red;
+}
+
+h2 {
+	color: #fff;
+}
+
+p {
+	text-align: justify;
+}
+
+.toolbar h1 {
+	color: red;
+}
+
+body.fullscreen #home .info {
+    display: none;
+}
+
+#about {
+    padding: 50px 10px 40px;
+    text-shadow: rgba(255, 255, 255, 0.3) 0px -1px 0;
+    font-size: 13px;
+    text-align: center;
+    background: #161618;
+}
+
+#about p {
+	text-align: center;
+}
+
+#about a {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#money p {
+	margin-bottom: 9px;
+}
+
+#calendar p {
+	text-align: left;
+}
+
+#calendar table, #calendar tr, #calendar th, #calendar td {
+	border: none;
+}
+
+#calendar th, #calendar td {
+	vertical-align: top;
+}
+
+#calendar th {
+	white-space: nowrap;
+	font-weight: bold;
+}
